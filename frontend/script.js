@@ -1,7 +1,7 @@
 /* script.js — SupportDesk AI frontend
  * Talks to the FastAPI backend (POST /chat and GET /health), keeps conversation
- * history in the browser (localStorage), and renders every message with
- * textContent so AI responses are never executed as HTML.
+ * history in the browser (localStorage), and builds formatted messages with
+ * text nodes so AI responses are never executed as HTML.
  */
 (() => {
   "use strict";
@@ -173,6 +173,66 @@
     return avatar;
   }
 
+  function normalizeAssistantText(text) {
+    return text
+      .replace(/\r\n?/g, "\n")
+      .replace(/<script\b[^>]*>[\s\S]*?(?:<\/script\s*>|$)/gi, "")
+      .replace(/<\/?[a-z][^>]*>/gi, "")
+      .replace(/[\u00a0\u2000-\u200a\u202f\u205f\u3000]/g, " ")
+      .replace(/[\u2010-\u2015\u2212]/g, "-")
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201c\u201d]/g, '"');
+  }
+
+  function appendInlineMarkdown(container, text) {
+    const parts = text.split(/(\*\*[^*\n]+?\*\*)/g);
+    parts.forEach((part) => {
+      if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+        const strong = document.createElement("strong");
+        strong.textContent = part.slice(2, -2);
+        container.appendChild(strong);
+      } else {
+        container.appendChild(document.createTextNode(part));
+      }
+    });
+  }
+
+  function renderAssistantText(container, text) {
+    const lines = normalizeAssistantText(text).split("\n");
+    let paragraph = null;
+    let list = null;
+
+    lines.forEach((line) => {
+      if (!line.trim()) {
+        paragraph = null;
+        list = null;
+        return;
+      }
+
+      const bullet = line.match(/^\s*[-*]\s+(.+)$/);
+      if (bullet) {
+        paragraph = null;
+        if (!list) {
+          list = document.createElement("ul");
+          container.appendChild(list);
+        }
+        const item = document.createElement("li");
+        appendInlineMarkdown(item, bullet[1]);
+        list.appendChild(item);
+        return;
+      }
+
+      list = null;
+      if (!paragraph) {
+        paragraph = document.createElement("p");
+        container.appendChild(paragraph);
+      } else {
+        paragraph.appendChild(document.createElement("br"));
+      }
+      appendInlineMarkdown(paragraph, line.trimEnd());
+    });
+  }
+
   function buildMessageElement(message) {
     const isUser = message.role === "user";
     const row = document.createElement("article");
@@ -183,7 +243,11 @@
 
     const bubble = document.createElement("div");
     bubble.className = "bubble";
-    bubble.textContent = message.text;
+    if (isUser) {
+      bubble.textContent = message.text;
+    } else {
+      renderAssistantText(bubble, message.text);
+    }
 
     const meta = document.createElement("time");
     meta.className = "meta";
@@ -201,6 +265,7 @@
 
     items.forEach((conversation) => {
       const item = document.createElement("li");
+      item.className = "history-entry";
       const button = document.createElement("button");
       const isActive = conversation.id === state.activeId;
 
@@ -219,7 +284,30 @@
       time.textContent = formatRelative(conversation.updatedAt);
 
       button.append(title, time);
-      item.appendChild(button);
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "history-delete-btn";
+      deleteButton.dataset.deleteId = conversation.id;
+      deleteButton.disabled = state.isSending;
+      deleteButton.setAttribute("aria-label", `Delete conversation: ${conversation.title}`);
+      deleteButton.title = "Delete conversation";
+
+      const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      icon.setAttribute("viewBox", "0 0 24 24");
+      icon.setAttribute("width", "16");
+      icon.setAttribute("height", "16");
+      icon.setAttribute("fill", "none");
+      icon.setAttribute("stroke", "currentColor");
+      icon.setAttribute("stroke-width", "2");
+      icon.setAttribute("stroke-linecap", "round");
+      icon.setAttribute("stroke-linejoin", "round");
+      icon.setAttribute("aria-hidden", "true");
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", "M3 6h18M8 6V4h8v2m-9 0 1 14h8l1-14M10 11v5m4-5v5");
+      icon.appendChild(path);
+      deleteButton.appendChild(icon);
+
+      item.append(button, deleteButton);
       dom.historyList.appendChild(item);
     });
 
@@ -533,6 +621,29 @@
     closeSidebar();
   }
 
+  function deleteConversation(id) {
+    if (state.isSending) return;
+
+    const conversation = getConversation(id);
+    if (!conversation) return;
+
+    const confirmed = window.confirm(
+      `Delete "${conversation.title}" from chat history? This cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    state.conversations = state.conversations.filter((item) => item.id !== id);
+    if (state.activeId === id) {
+      state.activeId = createConversation().id;
+      state.failedMessage = null;
+      hideError();
+      renderActiveConversation();
+    }
+
+    saveConversations();
+    renderHistory();
+  }
+
   /* ---------- Events ---------- */
 
   function bindEvents() {
@@ -546,6 +657,12 @@
     dom.newChatBtn.addEventListener("click", startNewConversation);
 
     dom.historyList.addEventListener("click", (event) => {
+      const deleteButton = event.target.closest("button[data-delete-id]");
+      if (deleteButton) {
+        deleteConversation(deleteButton.dataset.deleteId);
+        return;
+      }
+
       const item = event.target.closest("button[data-id]");
       if (item) switchConversation(item.dataset.id);
     });

@@ -253,8 +253,15 @@ button:disabled {
   overflow-y: auto;
 }
 
+.history-entry {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+}
+
 .history-item {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -265,6 +272,27 @@ button:disabled {
   color: #cbd5e1;
   text-align: left;
   transition: background var(--transition), color var(--transition);
+}
+
+.history-delete-btn {
+  width: 36px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: #94a3b8;
+  transition: background var(--transition), color var(--transition);
+}
+
+.history-delete-btn:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.18);
+  color: #fecaca;
+}
+
+.history-delete-btn:disabled {
+  opacity: 0.5;
 }
 
 .history-item:hover:not(:disabled) {
@@ -599,6 +627,23 @@ button:disabled {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   box-shadow: var(--shadow-sm);
+}
+
+.bubble p {
+  margin: 0;
+}
+
+.bubble p + p {
+  margin-top: 0.75em;
+}
+
+.bubble ul {
+  margin: 0.25em 0;
+  padding-left: 1.4em;
+}
+
+.bubble li + li {
+  margin-top: 0.25em;
 }
 
 .message-assistant .bubble {

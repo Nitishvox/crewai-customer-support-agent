@@ -118,7 +118,8 @@ def _build_tasks(
             "3. Report the order facts returned by the tool: order ID, product, status, tracking "
             "number, estimated delivery and amount.\n"
             "4. If there is no order ID, or the order is invalid or not found, state exactly which "
-            "information is missing.\n"
+            "information is missing. The lookup tool searches by order ID only; email and phone "
+            "numbers cannot be used to find orders.\n"
             "Never invent or assume order details."
         ),
         expected_output=(
@@ -159,11 +160,24 @@ def _build_tasks(
             "Include the verified order facts, explain the relevant policy in plain language, and "
             "if a ticket was created, include its ticket ID and say the team will follow up. If "
             "information is missing, politely ask for it.\n"
-            "Never invent order details, policies, dates or ticket IDs."
+            "Format the reply for chat: put the main answer first, use short paragraphs and line "
+            "breaks, and use simple hyphen bullets only when they make steps easier to follow. For "
+            "an order lookup, put each available verified detail on its own labeled line (Order, "
+            "Product, Status, Tracking, Estimated delivery); omit unavailable details. If the "
+            "customer asks for order history or provides only an email or phone number, explain "
+            "that you can look up an individual order by its order number and ask for that number. "
+            "Do not claim to search an account or website, retrieve order history, or use contact "
+            "details to find an order.\n"
+            "Include only details and policies relevant to the customer's question. State each "
+            "order fact and policy once; do not repeat the same summary or follow-up offer. Never "
+            "invent order details, policies, dates or ticket IDs."
         ),
         expected_output=(
-            "The final customer-facing reply only. Plain text, with no JSON, no internal notes and "
-            "no mention of agents or tools. Include the ticket reference if a ticket was created."
+            "One concise, customer-facing chat reply in plain text, with a clear main answer, "
+            "readable line breaks, and labeled order details when available. Ask only for an order "
+            "number when one is needed. No JSON, Markdown headings or tables, internal notes, or "
+            "mention of agents or tools. Do not repeat facts. Include the ticket reference if a "
+            "ticket was created."
         ),
         agent=resolution_agent,
         context=[order_task, policy_task],

@@ -16,6 +16,8 @@ Support teams answer the same questions repeatedly, and customers wait for repli
 - Explain refund, return, shipping, cancellation and payment policies from source text.
 - Create a support ticket with a reference number when a problem needs human follow-up.
 - Provide a responsive chat interface with clear loading and error states.
+- Format replies with concise, labeled order details and request an order number for lookups.
+- Render assistant emphasis and lists cleanly, and allow conversations to be deleted from local history.
 
 ## System Architecture
 
