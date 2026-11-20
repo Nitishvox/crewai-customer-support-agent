@@ -45,7 +45,7 @@
       "category": "Kitchen & Outdoors",
       "price": 24.99,
       "list_price": 32.99,
-      "stock": 48,
+      "stock": 44,
       "rating": 4.6,
       "reviews_count": 2150,
       "badge": "Popular",
@@ -204,6 +204,28 @@
       "tracking_id": "TRK-BBB36B99",
       "estimated_delivery": "2026-11-25",
       "amount": 49.98
+    },
+    {
+      "order_id": "ORD1010",
+      "customer_name": "Valued Customer",
+      "product_name": "Stainless Steel Water Bottle",
+      "quantity": 2,
+      "delivery_address": "12 Lake Road, Chennai",
+      "order_status": "Processing",
+      "tracking_id": "TRK-6F23BAFD",
+      "estimated_delivery": "2026-11-25",
+      "amount": 49.98
+    },
+    {
+      "order_id": "ORD1011",
+      "customer_name": "Valued Customer",
+      "product_name": "Stainless Steel Water Bottle",
+      "quantity": 2,
+      "delivery_address": "12 Lake Road, Chennai",
+      "order_status": "Processing",
+      "tracking_id": "TRK-8C2F056D",
+      "estimated_delivery": "2026-11-25",
+      "amount": 49.98
     }
   ],
   "policies": [
@@ -322,6 +344,13 @@
       "customer_message": "My item arrived damaged",
       "status": "open",
       "created_at": "2026-11-20T17:11:35+00:00"
+    },
+    {
+      "ticket_id": "TKT-DA9E52D5",
+      "issue": "Item damaged or issue reported",
+      "customer_message": "My item arrived damaged",
+      "status": "open",
+      "created_at": "2026-11-20T17:15:31+00:00"
     }
   ]
 }

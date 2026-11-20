@@ -987,12 +987,60 @@
     if (dom.retryBtn) dom.retryBtn.addEventListener("click", retryLastMessage);
     if (dom.dismissErrorBtn) dom.dismissErrorBtn.addEventListener("click", hideError);
 
+    // Department dropdown change
+    if (dom.deptSelect) {
+      dom.deptSelect.addEventListener("change", (e) => {
+        const val = e.target.value;
+        state.activeCategory = val;
+
+        // Sync with filter pills
+        document.querySelectorAll(".filter-pill").forEach((pill) => {
+          pill.classList.toggle("active", pill.dataset.category.toLowerCase() === val.toLowerCase());
+        });
+
+        // Update placeholder
+        if (dom.amzSearchInput) {
+          if (val === "all") {
+            dom.amzSearchInput.placeholder = "Search Amazon or ask Aria AI (e.g. 'Do you have fitness watch?')";
+          } else {
+            const label = e.target.options[e.target.selectedIndex].text;
+            dom.amzSearchInput.placeholder = `Search in ${label} or ask Aria...`;
+          }
+        }
+
+        renderProducts(dom.amzSearchInput ? dom.amzSearchInput.value : "");
+      });
+    }
+
+    // Deliver to location prompt
+    const locationBtn = document.getElementById("locationBtn");
+    const deliverLocation = document.getElementById("deliverLocation");
+    if (locationBtn && deliverLocation) {
+      locationBtn.addEventListener("click", () => {
+        const current = deliverLocation.textContent;
+        const newLoc = window.prompt("Enter your delivery city or pin code:", current);
+        if (newLoc && newLoc.trim()) {
+          deliverLocation.textContent = newLoc.trim();
+          showToast(`Delivery location updated to "${newLoc.trim()}"`);
+        }
+      });
+    }
+
     // Catalog filtering
     document.querySelectorAll(".filter-pill").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         document.querySelectorAll(".filter-pill").forEach((b) => b.classList.remove("active"));
         e.currentTarget.classList.add("active");
         state.activeCategory = e.currentTarget.dataset.category;
+
+        // Sync dropdown
+        if (dom.deptSelect) {
+          const matchOpt = Array.from(dom.deptSelect.options).find(
+            (opt) => opt.value.toLowerCase() === state.activeCategory.toLowerCase()
+          );
+          dom.deptSelect.value = matchOpt ? matchOpt.value : "all";
+        }
+
         renderProducts(dom.amzSearchInput ? dom.amzSearchInput.value : "");
       });
     });

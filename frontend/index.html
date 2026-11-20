@@ -23,8 +23,8 @@
       </a>
 
       <!-- Deliver To Location -->
-      <div class="amz-deliver-box" id="locationBtn" role="button" tabindex="0">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      <div class="amz-deliver-box" id="locationBtn" role="button" tabindex="0" title="Click to change location">
+        <svg class="deliver-pin-svg" viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
         <div class="amz-deliver-text">
           <span class="deliver-sub">Deliver to</span>
           <span class="deliver-main" id="deliverLocation">Chennai 600001</span>
@@ -32,31 +32,37 @@
       </div>
 
       <!-- Search Bar -->
-      <div class="amz-search-bar">
+      <div class="amz-search-bar" id="searchBarContainer">
         <select class="amz-search-dept" id="deptSelect" aria-label="Search Department">
-          <option value="all">All Departments</option>
-          <option value="electronics">Electronics</option>
-          <option value="wearables">Wearables</option>
-          <option value="furniture">Furniture</option>
-          <option value="kitchen">Kitchen & Home</option>
+          <option value="all">All</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Wearables">Wearables</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Kitchen & Outdoors">Kitchen</option>
+          <option value="Computers">Computers</option>
+          <option value="Home & Bedding">Home</option>
         </select>
         <input
           type="text"
           id="amzSearchInput"
           class="amz-search-input"
-          placeholder="Search products or ask Aria AI (e.g. 'Do you have fitness watch?')"
-          aria-label="Search products"
+          placeholder="Search Amazon or ask Aria AI (e.g. 'Do you have fitness watch?')"
+          aria-label="Search products or ask Aria AI"
         />
-        <button class="amz-search-btn" id="amzSearchBtn" type="button" aria-label="Submit search">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <button class="amz-search-btn" id="amzSearchBtn" type="button" aria-label="Submit search" title="Search">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         </button>
       </div>
 
       <!-- Quick Nav Actions -->
       <div class="amz-nav-actions">
-        <div class="amz-lang-selector" aria-label="Language selection">
-          <span class="flag-icon">🇺🇸</span>
-          <span class="lang-text">EN</span>
+        <div class="amz-lang-selector" id="langSelector" role="button" tabindex="0" aria-label="Language selection: English">
+          <svg class="flag-svg" viewBox="0 0 24 16" width="20" height="14" aria-hidden="true">
+            <rect width="24" height="16" fill="#b22234"/>
+            <path d="M0 2.46h24M0 4.92h24M0 7.38h24M0 9.84h24M0 12.3h24M0 14.76h24" stroke="#fff" stroke-width="1.23"/>
+            <rect width="10" height="8.6" fill="#3c3b6e"/>
+          </svg>
+          <span class="lang-text">EN ▾</span>
         </div>
 
         <div class="amz-nav-link" id="accountBtn" role="button" tabindex="0">
