@@ -1,9 +1,117 @@
 {
+  "products": [
+    {
+      "product_id": "PRD-101",
+      "name": "Wireless Noise-Cancelling Headphones",
+      "category": "Electronics",
+      "price": 129.99,
+      "list_price": 159.99,
+      "stock": 24,
+      "rating": 4.8,
+      "reviews_count": 1420,
+      "badge": "Overall Pick",
+      "description": "Premium over-ear headphones with active hybrid noise cancellation, 30-hour battery life, and crystal-clear microphone.",
+      "image_icon": "🎧"
+    },
+    {
+      "product_id": "PRD-102",
+      "name": "Smart Fitness Watch",
+      "category": "Wearables",
+      "price": 89.5,
+      "list_price": 119.99,
+      "stock": 18,
+      "rating": 4.7,
+      "reviews_count": 985,
+      "badge": "Best Seller",
+      "description": "All-day activity tracker with heart rate monitor, sleep tracking, GPS, and 7-day battery life. Water resistant up to 50m.",
+      "image_icon": "⌚"
+    },
+    {
+      "product_id": "PRD-103",
+      "name": "Ergonomic Office Chair",
+      "category": "Furniture",
+      "price": 249.0,
+      "list_price": 299.99,
+      "stock": 8,
+      "rating": 4.9,
+      "reviews_count": 630,
+      "badge": "Top Rated",
+      "description": "High-back mesh executive chair with adjustable lumbar support, 3D armrests, and smooth silent roller wheels.",
+      "image_icon": "🪑"
+    },
+    {
+      "product_id": "PRD-104",
+      "name": "Stainless Steel Water Bottle",
+      "category": "Kitchen & Outdoors",
+      "price": 24.99,
+      "list_price": 32.99,
+      "stock": 48,
+      "rating": 4.6,
+      "reviews_count": 2150,
+      "badge": "Popular",
+      "description": "Double-wall vacuum insulated water bottle (32oz), keeps drinks ice cold for 24 hours or piping hot for 12 hours. BPA-free.",
+      "image_icon": "🍶"
+    },
+    {
+      "product_id": "PRD-105",
+      "name": "4K Action Camera",
+      "category": "Electronics",
+      "price": 319.99,
+      "list_price": 379.99,
+      "stock": 12,
+      "rating": 4.5,
+      "reviews_count": 480,
+      "badge": "Limited Deal",
+      "description": "Ultra HD 4K 60FPS sports action cam with dual touchscreens, electronic image stabilization, and waterproof housing.",
+      "image_icon": "📷"
+    },
+    {
+      "product_id": "PRD-106",
+      "name": "Mechanical Keyboard",
+      "category": "Computers",
+      "price": 139.0,
+      "list_price": 169.99,
+      "stock": 31,
+      "rating": 4.9,
+      "reviews_count": 1740,
+      "badge": "Amazon Choice",
+      "description": "Hot-swappable tactile RGB gaming keyboard with custom PBT keycaps, sound-dampening foam, and braided USB-C cable.",
+      "image_icon": "⌨️"
+    },
+    {
+      "product_id": "PRD-107",
+      "name": "Fast Wireless Charging Stand",
+      "category": "Electronics",
+      "price": 29.99,
+      "list_price": 39.99,
+      "stock": 45,
+      "rating": 4.6,
+      "reviews_count": 820,
+      "badge": "Prime",
+      "description": "15W fast wireless charger stand compatible with iPhone and Android, dual-coil design for portrait and landscape viewing.",
+      "image_icon": "⚡"
+    },
+    {
+      "product_id": "PRD-108",
+      "name": "Organic Cotton Bed Sheet Set",
+      "category": "Home & Bedding",
+      "price": 59.99,
+      "list_price": 79.99,
+      "stock": 20,
+      "rating": 4.7,
+      "reviews_count": 540,
+      "badge": "Prime",
+      "description": "100% GOTS certified organic cotton 400 thread count sateen sheet set. Breathable, hypoallergenic, deep pocket design.",
+      "image_icon": "🛏️"
+    }
+  ],
   "orders": [
     {
       "order_id": "ORD1001",
       "customer_name": "Anita Sharma",
       "product_name": "Wireless Noise-Cancelling Headphones",
+      "quantity": 1,
+      "delivery_address": "45 Marine Drive, Mumbai, 400020",
       "order_status": "Shipped",
       "tracking_id": "TRK-88420193",
       "estimated_delivery": "2026-11-24",
@@ -13,6 +121,8 @@
       "order_id": "ORD1002",
       "customer_name": "Rahul Verma",
       "product_name": "Smart Fitness Watch",
+      "quantity": 1,
+      "delivery_address": "18 Brigade Road, Bengaluru, 560001",
       "order_status": "Delivered",
       "tracking_id": "TRK-884207715",
       "estimated_delivery": "2026-11-12",
@@ -22,7 +132,9 @@
       "order_id": "ORD1003",
       "customer_name": "Emily Carter",
       "product_name": "Ergonomic Office Chair",
-      "order_status": "Processing",
+      "quantity": 1,
+      "delivery_address": "742 Evergreen Terrace, Springfield, 97477",
+      "order_status": "Cancelled",
       "tracking_id": null,
       "estimated_delivery": "2026-11-30",
       "amount": 249.0
@@ -31,6 +143,8 @@
       "order_id": "ORD1004",
       "customer_name": "David Chen",
       "product_name": "Stainless Steel Water Bottle",
+      "quantity": 1,
+      "delivery_address": "88 Orchard Street, New York, NY 10002",
       "order_status": "Out for Delivery",
       "tracking_id": "TRK-884213560",
       "estimated_delivery": "2026-11-20",
@@ -40,6 +154,8 @@
       "order_id": "ORD1005",
       "customer_name": "Sofia Lopez",
       "product_name": "4K Action Camera",
+      "quantity": 1,
+      "delivery_address": "120 Sunset Blvd, Los Angeles, CA 90028",
       "order_status": "Cancelled",
       "tracking_id": null,
       "estimated_delivery": null,
@@ -49,10 +165,45 @@
       "order_id": "ORD1006",
       "customer_name": "Mohammed Ali",
       "product_name": "Mechanical Keyboard",
+      "quantity": 1,
+      "delivery_address": "22 Queen's Gate, London, SW7 5EX",
       "order_status": "Delayed",
       "tracking_id": "TRK-884219042",
       "estimated_delivery": "2026-11-27",
       "amount": 139.0
+    },
+    {
+      "order_id": "ORD1007",
+      "customer_name": "Valued Customer",
+      "product_name": "Stainless Steel Water Bottle",
+      "quantity": 1,
+      "delivery_address": "12 Lake Road, Chennai",
+      "order_status": "Processing",
+      "tracking_id": "TRK-425E1DF6",
+      "estimated_delivery": "2026-11-25",
+      "amount": 24.99
+    },
+    {
+      "order_id": "ORD1008",
+      "customer_name": "Valued Customer",
+      "product_name": "Stainless Steel Water Bottle",
+      "quantity": 1,
+      "delivery_address": "12 Lake Road, Chennai",
+      "order_status": "Processing",
+      "tracking_id": "TRK-0EE11D55",
+      "estimated_delivery": "2026-11-25",
+      "amount": 24.99
+    },
+    {
+      "order_id": "ORD1009",
+      "customer_name": "Valued Customer",
+      "product_name": "Stainless Steel Water Bottle",
+      "quantity": 2,
+      "delivery_address": "12 Lake Road, Chennai",
+      "order_status": "Processing",
+      "tracking_id": "TRK-BBB36B99",
+      "estimated_delivery": "2026-11-25",
+      "amount": 49.98
     }
   ],
   "policies": [
@@ -120,10 +271,10 @@
       "topic": "shipping",
       "title": "Delivery Address Changes",
       "content": "A delivery address can be changed only before the order has been handed over to the carrier.",
-      "eligibility": "Orders that have not yet been handed over to the carrier.",
+      "eligibility": "Orders that have not yet been handed over to the carrier (Processing status).",
       "conditions": [
         "The customer must provide the order ID and the new address.",
-        "Once the order is out for delivery, the address cannot be changed."
+        "Once the order is Shipped or Out for Delivery, the address cannot be changed."
       ]
     },
     {
@@ -164,6 +315,13 @@
       "customer_message": "I was charged twice for order ORD1002.",
       "status": "resolved",
       "created_at": "2026-11-15T14:05:00+00:00"
+    },
+    {
+      "ticket_id": "TKT-22EB50B8",
+      "issue": "Item damaged or issue reported",
+      "customer_message": "My item arrived damaged",
+      "status": "open",
+      "created_at": "2026-11-20T17:11:35+00:00"
     }
   ]
 }

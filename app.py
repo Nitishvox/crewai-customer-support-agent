@@ -1,11 +1,13 @@
 """
 app.py
-FastAPI backend for the AI Customer Support Agent.
+FastAPI backend for the Amazon-style Store & AI Customer Support Copilot (Aria).
 
 Endpoints:
-    GET  /health  - service status
-    POST /chat    - send a customer message through the CrewAI support crew
-    GET  /        - browser interface served from ./frontend
+    GET  /health        - Service and model health status
+    POST /chat          - Send customer question through Aria's AI workflow
+    GET  /api/products  - Catalog of products for the Amazon storefront
+    GET  /api/orders    - Existing order records
+    GET  /              - Amazon-style frontend interface
 """
 
 from __future__ import annotations
@@ -14,6 +16,7 @@ import asyncio
 import logging
 import os
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
@@ -22,17 +25,17 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 
-from crew import SupportCrewError, run_support_crew
+from crew import SupportCrewError, is_groq_configured, run_support_crew
+from tools import _read_knowledge_base, get_all_products
 
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
 FRONTEND_DIR = BASE_DIR / "frontend"
-APP_VERSION = "1.0.0"
-DEFAULT_MODEL = "groq/openai/gpt-oss-120b"
+APP_VERSION = "2.0.0"
+DEFAULT_MODEL = "groq/llama-3.3-70b-versatile"
 DEBUG = os.getenv("DEBUG", "false").strip().lower() in {"1", "true", "yes", "on"}
 CREW_TIMEOUT_SECONDS = float(os.getenv("CREW_TIMEOUT_SECONDS", "120"))
-DEFAULT_CORS_ORIGINS = "http://127.0.0.1:8000,http://localhost:8000"
 
 logging.basicConfig(
     level=logging.DEBUG if DEBUG else logging.INFO,
@@ -50,7 +53,7 @@ class ChatRequest(BaseModel):
         ...,
         min_length=1,
         max_length=2000,
-        description="The customer's question or message.",
+        description="The customer's question or command.",
         examples=["Where is my order ORD1001?"],
     )
 
@@ -64,13 +67,14 @@ class ChatRequest(BaseModel):
 
 
 class ChatResponse(BaseModel):
-    answer: str = Field(..., description="Customer-facing response from the support crew.")
+    answer: str = Field(..., description="Customer-facing response formatted in Markdown.")
 
 
 class HealthResponse(BaseModel):
     status: str
     version: str
     model: str
+    groq_configured: bool
 
 
 class ErrorResponse(BaseModel):
@@ -82,14 +86,16 @@ class ErrorResponse(BaseModel):
 # ---------------------------------------------------------------------------
 
 app = FastAPI(
-    title="AI Customer Support Agent",
+    title="Amazon Aria AI Store & Support Copilot",
     version=APP_VERSION,
-    description="Three-agent CrewAI customer support service powered by Groq.",
+    description="Amazon-style marketplace copilot powered by CrewAI and Groq.",
 )
 
 
 def _allowed_origins() -> list[str]:
-    raw = os.getenv("CORS_ORIGINS", DEFAULT_CORS_ORIGINS)
+    raw = os.getenv("CORS_ORIGINS", "*")
+    if raw.strip() == "*":
+        return ["*"]
     return [origin.strip() for origin in raw.split(",") if origin.strip()]
 
 
@@ -97,8 +103,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=_allowed_origins(),
     allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "Accept"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -113,12 +119,25 @@ async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONR
 
 @app.get("/health", response_model=HealthResponse, tags=["system"])
 async def health() -> HealthResponse:
-    """Report that the API is running and which model is configured."""
+    """Report that the API is running, which model is configured, and Groq status."""
     return HealthResponse(
         status="ok",
         version=APP_VERSION,
         model=os.getenv("MODEL_NAME", DEFAULT_MODEL),
+        groq_configured=is_groq_configured(),
     )
+
+
+@app.get("/api/products", tags=["store"])
+async def get_products() -> list[dict[str, Any]]:
+    """Return all products in the Amazon-style catalog."""
+    return get_all_products()
+
+
+@app.get("/api/orders", tags=["store"])
+async def get_orders() -> list[dict[str, Any]]:
+    """Return existing orders for order tracking."""
+    return _read_knowledge_base().get("orders", [])
 
 
 @app.post(
@@ -133,12 +152,11 @@ async def health() -> HealthResponse:
     tags=["support"],
 )
 async def chat(payload: ChatRequest) -> ChatResponse:
-    """Send a customer message through the three-agent CrewAI workflow."""
+    """Send a customer message through Aria's AI workflow."""
     logger.info("Chat request received (%d characters)", len(payload.message))
 
     try:
-        # The CrewAI workflow is synchronous, so run it in a worker thread
-        # to keep the event loop free for other requests.
+        # Run CrewAI synchronously in a worker thread to keep FastAPI event loop free
         answer = await asyncio.wait_for(
             asyncio.to_thread(run_support_crew, payload.message),
             timeout=CREW_TIMEOUT_SECONDS,
@@ -171,9 +189,11 @@ else:
 if __name__ == "__main__":
     import uvicorn
 
+    host = os.getenv("APP_HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", os.getenv("APP_PORT", "8000")))
     uvicorn.run(
         "app:app",
-        host=os.getenv("APP_HOST", "127.0.0.1"),
-        port=int(os.getenv("APP_PORT", "8000")),
+        host=host,
+        port=port,
         reload=DEBUG,
     )
