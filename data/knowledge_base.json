@@ -1,0 +1,169 @@
+{
+  "orders": [
+    {
+      "order_id": "ORD1001",
+      "customer_name": "Anita Sharma",
+      "product_name": "Wireless Noise-Cancelling Headphones",
+      "order_status": "Shipped",
+      "tracking_id": "TRK-88420193",
+      "estimated_delivery": "2026-11-24",
+      "amount": 129.99
+    },
+    {
+      "order_id": "ORD1002",
+      "customer_name": "Rahul Verma",
+      "product_name": "Smart Fitness Watch",
+      "order_status": "Delivered",
+      "tracking_id": "TRK-884207715",
+      "estimated_delivery": "2026-11-12",
+      "amount": 89.5
+    },
+    {
+      "order_id": "ORD1003",
+      "customer_name": "Emily Carter",
+      "product_name": "Ergonomic Office Chair",
+      "order_status": "Processing",
+      "tracking_id": null,
+      "estimated_delivery": "2026-11-30",
+      "amount": 249.0
+    },
+    {
+      "order_id": "ORD1004",
+      "customer_name": "David Chen",
+      "product_name": "Stainless Steel Water Bottle",
+      "order_status": "Out for Delivery",
+      "tracking_id": "TRK-884213560",
+      "estimated_delivery": "2026-11-20",
+      "amount": 24.99
+    },
+    {
+      "order_id": "ORD1005",
+      "customer_name": "Sofia Lopez",
+      "product_name": "4K Action Camera",
+      "order_status": "Cancelled",
+      "tracking_id": null,
+      "estimated_delivery": null,
+      "amount": 319.99
+    },
+    {
+      "order_id": "ORD1006",
+      "customer_name": "Mohammed Ali",
+      "product_name": "Mechanical Keyboard",
+      "order_status": "Delayed",
+      "tracking_id": "TRK-884219042",
+      "estimated_delivery": "2026-11-27",
+      "amount": 139.0
+    }
+  ],
+  "policies": [
+    {
+      "policy_id": "POL-REF-001",
+      "topic": "refund",
+      "title": "Standard Refund Policy",
+      "content": "Refunds are issued to the original payment method within 5 to 7 business days after the returned item is received and inspected, or after an approved cancellation.",
+      "eligibility": "Customers with an approved return, an approved cancellation, or a damaged, defective or incorrect item.",
+      "conditions": [
+        "Refund requests must be submitted within 30 days of delivery.",
+        "Shipping fees are non-refundable unless the item was damaged or incorrect.",
+        "The time to appear on the statement depends on the customer's bank or card issuer."
+      ]
+    },
+    {
+      "policy_id": "POL-REF-002",
+      "topic": "refund",
+      "title": "Refunds for Damaged or Incorrect Items",
+      "content": "If an item arrives damaged, defective or different from the order, the customer can receive a refund or a replacement.",
+      "eligibility": "Items that arrive damaged, defective or different from what was ordered.",
+      "conditions": [
+        "Photos of the item and its packaging must be provided.",
+        "The issue must be reported within 7 days of delivery.",
+        "A replacement may be offered instead of a refund if stock is available."
+      ]
+    },
+    {
+      "policy_id": "POL-RET-001",
+      "topic": "return",
+      "title": "Standard Return Policy",
+      "content": "Most unused items may be returned within 30 days of delivery in their original packaging.",
+      "eligibility": "Customers with a delivered order that is still inside the 30-day return window.",
+      "conditions": [
+        "The item must be unused and in its original condition.",
+        "Original packaging and accessories must be included.",
+        "Return shipping is free for defective items. Otherwise the customer pays the return shipping."
+      ]
+    },
+    {
+      "policy_id": "POL-RET-002",
+      "topic": "return",
+      "title": "Non-Returnable Items",
+      "content": "Some items cannot be returned for hygiene, safety or personalisation reasons.",
+      "eligibility": "Items in the restricted categories listed below.",
+      "conditions": [
+        "Opened personal care products.",
+        "Custom or personalised orders.",
+        "Digital gift cards."
+      ]
+    },
+    {
+      "policy_id": "POL-SHIP-001",
+      "topic": "shipping",
+      "title": "Shipping Times and Options",
+      "content": "Standard shipping usually takes 3 to 5 business days. Express shipping usually takes 1 to 2 business days. Delivery times start once the order has been dispatched.",
+      "eligibility": "All orders placed on the store.",
+      "conditions": [
+        "Delivery estimates may change because of carrier delays.",
+        "Orders placed after 2 PM are dispatched on the next business day."
+      ]
+    },
+    {
+      "policy_id": "POL-SHIP-002",
+      "topic": "shipping",
+      "title": "Delivery Address Changes",
+      "content": "A delivery address can be changed only before the order has been handed over to the carrier.",
+      "eligibility": "Orders that have not yet been handed over to the carrier.",
+      "conditions": [
+        "The customer must provide the order ID and the new address.",
+        "Once the order is out for delivery, the address cannot be changed."
+      ]
+    },
+    {
+      "policy_id": "POL-CAN-001",
+      "topic": "cancellation",
+      "title": "Order Cancellation",
+      "content": "Orders can be cancelled free of charge while they are in Processing status.",
+      "eligibility": "Customers who request cancellation before the order has shipped.",
+      "conditions": [
+        "Orders with status Shipped, Out for Delivery or Delivered cannot be cancelled. Use the return process instead.",
+        "Refunds for cancelled orders are issued within 5 to 7 business days."
+      ]
+    },
+    {
+      "policy_id": "POL-PAY-001",
+      "topic": "payment",
+      "title": "Declined Payments and Duplicate Charges",
+      "content": "If a payment is declined or a customer is charged twice for the same order, the duplicate charge is reversed after verification.",
+      "eligibility": "Customers reporting a declined payment or a duplicate charge on an order.",
+      "conditions": [
+        "Verification requires the order ID and the last four digits of the card.",
+        "Duplicate charges are reversed within 2 business days after verification.",
+        "Bank processing times vary and can take 3 to 10 business days to appear."
+      ]
+    }
+  ],
+  "tickets": [
+    {
+      "ticket_id": "TKT-A1B2C3D4",
+      "issue": "Item arrived damaged",
+      "customer_message": "My water bottle arrived with a large dent in it.",
+      "status": "open",
+      "created_at": "2026-11-18T10:42:00+00:00"
+    },
+    {
+      "ticket_id": "TKT-E5F6A7B8",
+      "issue": "Duplicate payment charge",
+      "customer_message": "I was charged twice for order ORD1002.",
+      "status": "resolved",
+      "created_at": "2026-11-15T14:05:00+00:00"
+    }
+  ]
+}
