@@ -1,5 +1,7 @@
 # SupportDesk AI: Customer Support Agent
 
+**Live demo:** [Try SupportDesk AI](https://crewai-customer-support-agent.onrender.com/)
+
 A customer support assistant built with **CrewAI**, **Groq** and **FastAPI**. Three specialised agents work in sequence to look up orders, check company policies and reply to the customer. Unresolved problems become support tickets.
 
 ## Overview
