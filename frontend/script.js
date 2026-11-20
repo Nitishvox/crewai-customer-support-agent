@@ -1,14 +1,16 @@
-/* script.js — Amazon Marketplace with Aria AI Copilot
- * Handles product browsing, cart, orders tracking, and full Aria AI Copilot
- * conversation management with safe Markdown rendering and conversation deletion.
+/* script.js — Aria Market AI Commerce & Support Platform
+ * Connects product browsing, live inventory, cart simulation, order tracking,
+ * and the Aria AI Copilot with safe Markdown rendering and client-side chat management.
  */
 (() => {
   "use strict";
 
   const CONFIG = Object.freeze({
     apiBase: window.location.protocol === "file:" ? "http://127.0.0.1:8000" : "",
-    storageKey: "amazon-aria.conversations.v2",
-    cartStorageKey: "amazon-aria.cart.v2",
+    storageKey: "ariamarket.conversations.v3",
+    cartStorageKey: "ariamarket.cart.v3",
+    locationStorageKey: "ariamarket.location.v3",
+    defaultLocation: "San Francisco, CA 94105",
     maxConversations: 30,
     maxMessageLength: 2000,
     requestTimeoutMs: 120000,
@@ -26,7 +28,7 @@
       stock: 24,
       rating: 4.8,
       reviews_count: 1420,
-      badge: "Overall Pick",
+      badge: "Top Pick",
       description: "Premium over-ear headphones with active hybrid noise cancellation, 30-hour battery life, and crystal-clear microphone.",
       image_icon: "🎧"
     },
@@ -52,7 +54,7 @@
       stock: 7,
       rating: 4.9,
       reviews_count: 630,
-      badge: "Top Rated",
+      badge: "Staff Choice",
       description: "High-back mesh executive chair with adjustable lumbar support, 3D armrests, and smooth silent roller wheels.",
       image_icon: "🪑"
     },
@@ -91,7 +93,7 @@
       stock: 31,
       rating: 4.9,
       reviews_count: 1740,
-      badge: "Amazon Choice",
+      badge: "Aria's Choice",
       description: "Hot-swappable tactile RGB gaming keyboard with custom PBT keycaps, sound-dampening foam, and braided USB-C cable.",
       image_icon: "⌨️"
     },
@@ -104,7 +106,7 @@
       stock: 45,
       rating: 4.6,
       reviews_count: 820,
-      badge: "Prime",
+      badge: "Express",
       description: "15W fast wireless charger stand compatible with iPhone and Android, dual-coil design for portrait and landscape viewing.",
       image_icon: "⚡"
     },
@@ -117,7 +119,7 @@
       stock: 20,
       rating: 4.7,
       reviews_count: 540,
-      badge: "Prime",
+      badge: "Express",
       description: "100% GOTS certified organic cotton 400 thread count sateen sheet set. Breathable, hypoallergenic, deep pocket design.",
       image_icon: "🛏️"
     }
@@ -137,13 +139,16 @@
     ordersList: document.getElementById("ordersList"),
     toast: document.getElementById("toastNotification"),
     toastMessage: document.getElementById("toastMessage"),
+    locationBtn: document.getElementById("locationBtn"),
+    deliverLocation: document.getElementById("deliverLocation"),
+    orderTrackLink: document.getElementById("orderTrackLink"),
+    supportPoliciesLink: document.getElementById("supportPoliciesLink"),
 
     // Aria drawer elements
     ariaDrawer: document.getElementById("ariaDrawer"),
     openAriaBtn: document.getElementById("openAriaBtn"),
     closeAriaBtn: document.getElementById("closeAriaBtn"),
     floatingAriaPill: document.getElementById("floatingAriaPill"),
-    ariaCopilotPill: document.getElementById("ariaCopilotPill"),
     historyToggleBtn: document.getElementById("historyToggleBtn"),
     ariaHistoryPanel: document.getElementById("ariaHistoryPanel"),
     clearAllHistoryBtn: document.getElementById("clearAllHistoryBtn"),
@@ -174,6 +179,7 @@
     isSending: false,
     failedMessage: null,
     historyOpen: false,
+    userLocation: CONFIG.defaultLocation,
   };
 
   /* ---------- Custom Error ---------- */
@@ -230,6 +236,39 @@
     dom.toast._timer = window.setTimeout(() => {
       dom.toast.hidden = true;
     }, 2800);
+  }
+
+  /* ---------- Location Preference ---------- */
+
+  function loadLocation() {
+    try {
+      const saved = localStorage.getItem(CONFIG.locationStorageKey);
+      if (saved && saved.trim()) {
+        state.userLocation = saved.trim();
+      } else {
+        state.userLocation = CONFIG.defaultLocation;
+      }
+    } catch {
+      state.userLocation = CONFIG.defaultLocation;
+    }
+    if (dom.deliverLocation) {
+      dom.deliverLocation.textContent = state.userLocation;
+    }
+  }
+
+  function setLocation(newLocation) {
+    const clean = (newLocation || "").trim();
+    if (!clean) return;
+    state.userLocation = clean;
+    try {
+      localStorage.setItem(CONFIG.locationStorageKey, clean);
+    } catch {
+      // Ignore
+    }
+    if (dom.deliverLocation) {
+      dom.deliverLocation.textContent = clean;
+    }
+    showToast(`Delivery location set to "${clean}"`);
   }
 
   /* ---------- Conversation Storage ---------- */
@@ -314,7 +353,7 @@
       state.cart.push({ ...product, quantity: 1 });
     }
     saveCart();
-    showToast(`Added 1x "${product.name}" to Cart!`);
+    showToast(`Added 1x "${product.name}" to cart!`);
   }
 
   /* ---------- Catalog Rendering ---------- */
@@ -354,60 +393,58 @@
 
     if (list.length === 0) {
       const empty = document.createElement("div");
-      empty.className = "empty-catalog";
-      empty.textContent = `No products found matching "${filterKeyword}". Try searching something else or ask Aria!`;
+      empty.className = "empty-catalog-box";
+      empty.textContent = `No products found matching "${filterKeyword}". Try searching another item or ask Aria!`;
       dom.productGrid.appendChild(empty);
       return;
     }
 
     list.forEach((product) => {
       const card = document.createElement("article");
-      card.className = "product-card";
+      card.className = "product-card-item";
 
-      // Badge
       const badgeHtml = product.badge
-        ? `<div class="card-badge ${product.badge.toLowerCase().includes("prime") ? "badge-prime" : ""}">${product.badge}</div>`
+        ? `<div class="card-badge-pill ${product.badge.toLowerCase().includes("express") ? "badge-express" : ""}">${product.badge}</div>`
         : "";
 
-      // Stock text
       const stockHtml =
         product.stock > 0
-          ? `<span class="stock-tag in-stock">In Stock (${product.stock} available)</span>`
-          : `<span class="stock-tag out-of-stock">Currently Out of Stock</span>`;
+          ? `<span class="stock-pill in-stock">● In Stock (${product.stock} units available)</span>`
+          : `<span class="stock-pill out-of-stock">● Currently Out of Stock</span>`;
 
       card.innerHTML = `
         ${badgeHtml}
-        <div class="product-visual">
-          <span class="product-icon">${product.image_icon || "📦"}</span>
+        <div class="product-card-visual">
+          <span class="product-emoji">${product.image_icon || "🛍️"}</span>
         </div>
-        <div class="product-info">
-          <span class="product-category">${product.category}</span>
-          <h3 class="product-title" title="${product.name}">${product.name}</h3>
+        <div class="product-card-content">
+          <span class="product-card-dept">${product.category}</span>
+          <h3 class="product-card-title" title="${product.name}">${product.name}</h3>
           
-          <div class="product-rating">
-            <span class="stars">★★★★★</span>
-            <span class="rating-val">${product.rating || "4.8"}</span>
-            <span class="rating-count">(${Number(product.reviews_count || 1200).toLocaleString()})</span>
+          <div class="product-card-rating">
+            <span class="star-symbols">★★★★★</span>
+            <span class="rating-number">${product.rating || "4.8"}</span>
+            <span class="rating-reviews">(${Number(product.reviews_count || 1200).toLocaleString()})</span>
           </div>
 
-          <div class="product-price-row">
-            <span class="price-symbol">$</span>
-            <span class="price-val">${Number(product.price).toFixed(2)}</span>
-            ${product.list_price ? `<span class="list-price">List: $${product.list_price.toFixed(2)}</span>` : ""}
+          <div class="product-card-pricing">
+            <span class="currency-tag">$</span>
+            <span class="price-main">${Number(product.price).toFixed(2)}</span>
+            ${product.list_price ? `<span class="price-strikethrough">$${product.list_price.toFixed(2)}</span>` : ""}
           </div>
 
-          <div class="prime-delivery">
-            <span class="prime-logo">prime</span>
-            <span class="delivery-text">FREE delivery Tomorrow</span>
+          <div class="express-delivery-row">
+            <span class="express-icon">⚡</span>
+            <span class="express-label">Aria Express: Free 2-Day Delivery</span>
           </div>
 
           ${stockHtml}
 
-          <div class="card-actions">
-            <button class="btn-add-cart" type="button" data-add-id="${product.product_id}">
+          <div class="card-action-buttons">
+            <button class="btn-add-cart-action" type="button" data-add-id="${product.product_id}">
               Add to Cart
             </button>
-            <button class="btn-ask-aria" type="button" data-ask-name="${product.name}">
+            <button class="btn-ask-aria-action" type="button" data-ask-name="${product.name}">
               ✨ Ask Aria
             </button>
           </div>
@@ -422,7 +459,7 @@
 
   async function showOrdersModal() {
     if (!dom.ordersModal || !dom.ordersList) return;
-    dom.ordersList.innerHTML = "<p>Loading your orders…</p>";
+    dom.ordersList.innerHTML = "<p>Loading orders from demo sandbox…</p>";
     dom.ordersModal.hidden = false;
 
     try {
@@ -430,14 +467,24 @@
       const orders = res.ok ? await res.json() : [];
       dom.ordersList.replaceChildren();
 
+      // Add sandbox disclosure banner inside orders modal
+      const notice = document.createElement("div");
+      notice.className = "modal-notice-banner";
+      notice.innerHTML = `
+        <span>ℹ️ <strong>Demo Sandbox</strong>: Order records and tickets are simulated in session memory. User chat history is saved in your browser.</span>
+      `;
+      dom.ordersList.appendChild(notice);
+
       if (!Array.isArray(orders) || orders.length === 0) {
-        dom.ordersList.innerHTML = "<p>No orders on file yet. Start shopping with Aria!</p>";
+        const noOrders = document.createElement("p");
+        noOrders.textContent = "No orders on file yet. Try asking Aria: 'Order 2 water bottles to 12 Lake Road, Chennai'!";
+        dom.ordersList.appendChild(noOrders);
         return;
       }
 
       orders.forEach((order) => {
         const item = document.createElement("div");
-        item.className = "order-card";
+        item.className = "order-feed-card";
 
         const statusClass =
           order.order_status === "Delivered"
@@ -449,37 +496,37 @@
             : "status-shipped";
 
         item.innerHTML = `
-          <div class="order-header-row">
+          <div class="order-top-row">
             <div>
-              <span class="order-id">Order #${order.order_id}</span>
-              <span class="order-customer"> · ${order.customer_name || "Customer"}</span>
+              <span class="order-ref-id">Order #${order.order_id}</span>
+              <span class="order-buyer"> · ${order.customer_name || "Valued Customer"}</span>
             </div>
-            <span class="order-status-pill ${statusClass}">${order.order_status}</span>
+            <span class="order-badge ${statusClass}">${order.order_status}</span>
           </div>
-          <div class="order-details">
+          <div class="order-info-grid">
             <p><strong>Item:</strong> ${order.product_name} (Qty: ${order.quantity || 1})</p>
             <p><strong>Total:</strong> $${Number(order.amount).toFixed(2)}</p>
             <p><strong>Ship to:</strong> ${order.delivery_address || "Not specified"}</p>
             ${order.tracking_id ? `<p><strong>Tracking:</strong> <code>${order.tracking_id}</code></p>` : ""}
             ${order.estimated_delivery ? `<p><strong>Est. Delivery:</strong> ${order.estimated_delivery}</p>` : ""}
           </div>
-          <div class="order-actions">
-            <button class="order-btn" data-order-action="track" data-id="${order.order_id}">
+          <div class="order-control-actions">
+            <button class="order-action-btn" data-order-action="track" data-id="${order.order_id}">
               🔍 Track with Aria
             </button>
             ${
               order.order_status === "Processing"
                 ? `
-              <button class="order-btn" data-order-action="cancel" data-id="${order.order_id}">
+              <button class="order-action-btn" data-order-action="cancel" data-id="${order.order_id}">
                 ❌ Cancel Order
               </button>
-              <button class="order-btn" data-order-action="address" data-id="${order.order_id}">
+              <button class="order-action-btn" data-order-action="address" data-id="${order.order_id}">
                 📍 Change Address
               </button>
             `
                 : ""
             }
-            <button class="order-btn" data-order-action="damaged" data-id="${order.order_id}">
+            <button class="order-action-btn" data-order-action="damaged" data-id="${order.order_id}">
               ⚠️ Report Issue
             </button>
           </div>
@@ -524,7 +571,7 @@
 
   function createAvatar(label) {
     const avatar = document.createElement("div");
-    avatar.className = `avatar ${label === "AI" ? "avatar-ai" : "avatar-user"}`;
+    avatar.className = `copilot-msg-avatar ${label === "AI" ? "avatar-aria" : "avatar-user"}`;
     avatar.setAttribute("aria-hidden", "true");
     avatar.textContent = label;
     return avatar;
@@ -534,13 +581,13 @@
   function buildMessageElement(message) {
     const isUser = message.role === "user";
     const row = document.createElement("article");
-    row.className = `message ${isUser ? "message-user" : "message-assistant"}`;
+    row.className = `chat-message-row ${isUser ? "msg-from-user" : "msg-from-assistant"}`;
 
     const body = document.createElement("div");
-    body.className = "message-body";
+    body.className = "chat-message-body";
 
     const bubble = document.createElement("div");
-    bubble.className = "bubble";
+    bubble.className = "chat-bubble";
 
     if (isUser || typeof window.renderMarkdown !== "function") {
       // Customer messages stay plain text
@@ -551,12 +598,12 @@
     }
 
     const meta = document.createElement("time");
-    meta.className = "meta";
+    meta.className = "chat-timestamp";
     meta.dateTime = message.createdAt;
-    meta.textContent = `${isUser ? "You" : "Aria AI"} · ${formatClock(message.createdAt)}`;
+    meta.textContent = `${isUser ? "You" : "Aria"} · ${formatClock(message.createdAt)}`;
 
     body.append(bubble, meta);
-    row.append(createAvatar(isUser ? "You" : "AI"), body);
+    row.append(createAvatar(isUser ? "You" : "Aria"), body);
     return row;
   }
 
@@ -570,21 +617,21 @@
 
     items.forEach((conversation) => {
       const item = document.createElement("li");
-      item.className = "history-entry";
+      item.className = "history-entry-item";
       const isActive = conversation.id === state.activeId;
 
       const button = document.createElement("button");
       button.type = "button";
-      button.className = `history-item${isActive ? " is-active" : ""}`;
+      button.className = `history-item-btn${isActive ? " is-active" : ""}`;
       button.dataset.id = conversation.id;
       button.disabled = state.isSending && !isActive;
 
       const title = document.createElement("span");
-      title.className = "history-title";
+      title.className = "history-item-title";
       title.textContent = conversation.title;
 
       const time = document.createElement("span");
-      time.className = "history-time";
+      time.className = "history-item-time";
       time.textContent = formatRelative(conversation.updatedAt);
 
       button.append(title, time);
@@ -592,7 +639,7 @@
       // Delete Button for this individual conversation
       const deleteButton = document.createElement("button");
       deleteButton.type = "button";
-      deleteButton.className = "history-delete-btn";
+      deleteButton.className = "history-item-del-btn";
       deleteButton.dataset.deleteId = conversation.id;
       deleteButton.disabled = state.isSending;
       deleteButton.title = "Delete conversation";
@@ -655,26 +702,26 @@
     hideTypingIndicator();
 
     const row = document.createElement("div");
-    row.className = "message message-assistant message-typing";
+    row.className = "chat-message-row msg-from-assistant message-typing";
     row.setAttribute("role", "status");
 
     const body = document.createElement("div");
-    body.className = "message-body";
+    body.className = "chat-message-body";
 
     const bubble = document.createElement("div");
-    bubble.className = "bubble typing-bubble";
+    bubble.className = "chat-bubble typing-bubble";
     for (let i = 0; i < 3; i++) {
       const dot = document.createElement("span");
-      dot.className = "typing-dot";
+      dot.className = "typing-dot-anim";
       bubble.appendChild(dot);
     }
 
     const label = document.createElement("span");
-    label.className = "meta";
-    label.textContent = "Aria is checking inventory, orders & policies…";
+    label.className = "chat-timestamp";
+    label.textContent = "Aria is verifying inventory, orders & policies…";
 
     body.append(bubble, label);
-    row.append(createAvatar("AI"), body);
+    row.append(createAvatar("Aria"), body);
 
     if (dom.messages) {
       dom.messages.appendChild(row);
@@ -897,7 +944,6 @@
     try {
       const res = await fetch(`${CONFIG.apiBase}/health`, { cache: "no-store" });
       if (res.ok) {
-        const data = await res.json();
         if (dom.ariaStatusText) dom.ariaStatusText.textContent = "Online";
         if (dom.ariaStatusBadge) dom.ariaStatusBadge.dataset.state = "online";
       } else {
@@ -961,10 +1007,6 @@
     if (dom.openAriaBtn) dom.openAriaBtn.addEventListener("click", () => openAria());
     if (dom.closeAriaBtn) dom.closeAriaBtn.addEventListener("click", () => closeAria());
     if (dom.floatingAriaPill) dom.floatingAriaPill.addEventListener("click", () => openAria());
-    if (dom.ariaCopilotPill) dom.ariaCopilotPill.addEventListener("click", (e) => {
-      e.preventDefault();
-      openAria();
-    });
 
     // History & New Chat
     if (dom.historyToggleBtn) dom.historyToggleBtn.addEventListener("click", toggleHistoryPanel);
@@ -993,15 +1035,15 @@
         const val = e.target.value;
         state.activeCategory = val;
 
-        // Sync with filter pills
-        document.querySelectorAll(".filter-pill").forEach((pill) => {
-          pill.classList.toggle("active", pill.dataset.category.toLowerCase() === val.toLowerCase());
+        // Sync with filter category tabs
+        document.querySelectorAll(".category-tab").forEach((tab) => {
+          tab.classList.toggle("active", tab.dataset.category.toLowerCase() === val.toLowerCase());
         });
 
         // Update placeholder
         if (dom.amzSearchInput) {
           if (val === "all") {
-            dom.amzSearchInput.placeholder = "Search Amazon or ask Aria AI (e.g. 'Do you have fitness watch?')";
+            dom.amzSearchInput.placeholder = "Search products or ask Aria AI (e.g. 'Do you have fitness watch?')";
           } else {
             const label = e.target.options[e.target.selectedIndex].text;
             dom.amzSearchInput.placeholder = `Search in ${label} or ask Aria...`;
@@ -1012,24 +1054,21 @@
       });
     }
 
-    // Deliver to location prompt
-    const locationBtn = document.getElementById("locationBtn");
-    const deliverLocation = document.getElementById("deliverLocation");
-    if (locationBtn && deliverLocation) {
-      locationBtn.addEventListener("click", () => {
-        const current = deliverLocation.textContent;
-        const newLoc = window.prompt("Enter your delivery city or pin code:", current);
+    // Deliver to location prompt (interactive, stored in localStorage)
+    if (dom.locationBtn) {
+      dom.locationBtn.addEventListener("click", () => {
+        const current = state.userLocation || CONFIG.defaultLocation;
+        const newLoc = window.prompt("Enter your delivery city or postal code:", current);
         if (newLoc && newLoc.trim()) {
-          deliverLocation.textContent = newLoc.trim();
-          showToast(`Delivery location updated to "${newLoc.trim()}"`);
+          setLocation(newLoc.trim());
         }
       });
     }
 
-    // Catalog filtering
-    document.querySelectorAll(".filter-pill").forEach((btn) => {
+    // Catalog category tabs filtering
+    document.querySelectorAll(".category-tab").forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        document.querySelectorAll(".filter-pill").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".category-tab").forEach((b) => b.classList.remove("active"));
         e.currentTarget.classList.add("active");
         state.activeCategory = e.currentTarget.dataset.category;
 
@@ -1049,7 +1088,7 @@
     if (dom.amzSearchBtn && dom.amzSearchInput) {
       const doSearch = () => {
         const query = dom.amzSearchInput.value.trim();
-        // If user typed question for Aria, open Aria directly
+        // If query looks like a conversational question, open Aria
         if (/where|how|can|refund|order|stock|help|who|what|\?/i.test(query)) {
           openAria(query);
         } else {
@@ -1084,6 +1123,14 @@
 
     // Orders Modal
     if (dom.ordersNavBtn) dom.ordersNavBtn.addEventListener("click", showOrdersModal);
+    if (dom.orderTrackLink) dom.orderTrackLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      showOrdersModal();
+    });
+    if (dom.supportPoliciesLink) dom.supportPoliciesLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      openAria("What is your return and refund policy?");
+    });
     if (dom.closeOrdersModalBtn) dom.closeOrdersModalBtn.addEventListener("click", closeOrdersModal);
     if (dom.ordersModal) {
       dom.ordersModal.addEventListener("click", (e) => {
@@ -1116,6 +1163,7 @@
   /* ---------- Initialization ---------- */
 
   function init() {
+    loadLocation();
     loadCart();
 
     state.conversations = loadConversations()

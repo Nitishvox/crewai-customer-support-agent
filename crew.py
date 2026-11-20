@@ -1,6 +1,6 @@
 """
 crew.py
-Multi-agent CrewAI workflow for the Amazon-style Store & Customer Support Assistant (Aria).
+Multi-agent CrewAI workflow for the Aria Market Store & Customer Support Assistant.
 
     Store & Order Agent  ->  Policy Specialist Agent  ->  Customer Resolution Agent
 
@@ -93,7 +93,7 @@ def _build_agents(llm: LLM) -> tuple[Agent, Agent, Agent]:
             "place new customer orders, update delivery addresses, and cancel eligible orders."
         ),
         backstory=(
-            "You are an expert e-commerce operations specialist for our Amazon-style store. "
+            "You are an expert e-commerce operations specialist for Aria Market. "
             "You use check_inventory to report stock and price facts, lookup_order to find order status "
             "and delivery estimates, place_order to create new customer orders when requested, "
             "cancel_order to cancel orders in Processing status, and update_delivery_address to change "
@@ -131,7 +131,7 @@ def _build_agents(llm: LLM) -> tuple[Agent, Agent, Agent]:
             "Markdown response. Open a support ticket when an issue requires human assistance."
         ),
         backstory=(
-            "You are Aria, the intelligent Amazon-style shopping and customer support copilot. "
+            "You are Aria, the intelligent shopping and customer support copilot for Aria Market. "
             "You communicate with clarity, warmth, and accuracy. When an issue cannot be resolved "
             "automatically (e.g. damaged goods, missing items, payment disputes), you open a support "
             "ticket with create_support_ticket and share the ticket ID with the customer."
@@ -369,7 +369,7 @@ def run_direct_intent_fallback(customer_message: str) -> str:
 
     # Generic greeting / fallback
     return (
-        "Hello! I am **Aria**, your Amazon-style shopping and customer support assistant.\n\n"
+        "Hello! I am **Aria**, your shopping and customer support assistant for **Aria Market**.\n\n"
         "Here are a few things I can help you with:\n"
         "- **Check stock & prices**: *\"Do you have Smart Fitness Watch in stock?\"*\n"
         "- **Place orders**: *\"Order 2 water bottles to 12 Lake Road, Chennai\"*\n"

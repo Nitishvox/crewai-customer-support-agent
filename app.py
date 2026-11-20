@@ -1,13 +1,13 @@
 """
 app.py
-FastAPI backend for the Amazon-style Store & AI Customer Support Copilot (Aria).
+FastAPI backend for Aria Market AI Store & Support Copilot.
 
 Endpoints:
     GET  /health        - Service and model health status
     POST /chat          - Send customer question through Aria's AI workflow
-    GET  /api/products  - Catalog of products for the Amazon storefront
+    GET  /api/products  - Catalog of products for Aria Market
     GET  /api/orders    - Existing order records
-    GET  /              - Amazon-style frontend interface
+    GET  /              - Aria Market frontend interface
 """
 
 from __future__ import annotations
@@ -86,9 +86,9 @@ class ErrorResponse(BaseModel):
 # ---------------------------------------------------------------------------
 
 app = FastAPI(
-    title="Amazon Aria AI Store & Support Copilot",
+    title="Aria Market AI Store & Support Copilot",
     version=APP_VERSION,
-    description="Amazon-style marketplace copilot powered by CrewAI and Groq.",
+    description="Aria Market intelligent e-commerce copilot powered by CrewAI and Groq.",
 )
 
 

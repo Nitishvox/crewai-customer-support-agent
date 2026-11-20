@@ -45,7 +45,7 @@
       "category": "Kitchen & Outdoors",
       "price": 24.99,
       "list_price": 32.99,
-      "stock": 44,
+      "stock": 42,
       "rating": 4.6,
       "reviews_count": 2150,
       "badge": "Popular",
@@ -74,7 +74,7 @@
       "stock": 31,
       "rating": 4.9,
       "reviews_count": 1740,
-      "badge": "Amazon Choice",
+      "badge": "Aria's Choice",
       "description": "Hot-swappable tactile RGB gaming keyboard with custom PBT keycaps, sound-dampening foam, and braided USB-C cable.",
       "image_icon": "⌨️"
     },
@@ -226,6 +226,17 @@
       "tracking_id": "TRK-8C2F056D",
       "estimated_delivery": "2026-11-25",
       "amount": 49.98
+    },
+    {
+      "order_id": "ORD1012",
+      "customer_name": "Valued Customer",
+      "product_name": "Stainless Steel Water Bottle",
+      "quantity": 2,
+      "delivery_address": "12 Lake Road, Chennai",
+      "order_status": "Processing",
+      "tracking_id": "TRK-94871782",
+      "estimated_delivery": "2026-11-25",
+      "amount": 49.98
     }
   ],
   "policies": [
@@ -351,6 +362,13 @@
       "customer_message": "My item arrived damaged",
       "status": "open",
       "created_at": "2026-11-20T17:15:31+00:00"
+    },
+    {
+      "ticket_id": "TKT-0DE14EDE",
+      "issue": "Item damaged or issue reported",
+      "customer_message": "My item arrived damaged",
+      "status": "open",
+      "created_at": "2026-11-20T17:42:03+00:00"
     }
   ]
 }

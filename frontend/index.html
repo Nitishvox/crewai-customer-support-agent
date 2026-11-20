@@ -3,38 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Amazon Marketplace with Aria — 24/7 AI Shopping and Customer Support Copilot." />
-  <meta name="theme-color" content="#131921" />
-  <title>Amazon.com · Shopping & Aria AI Copilot</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='85'%3E📦%3C/text%3E%3C/svg%3E" />
+  <meta name="description" content="Aria Market — AI-Powered E-Commerce Store with 24/7 Shopping & Customer Support Copilot." />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Aria Market · Smart AI Shopping & Support</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='85'%3E🛍️%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Top Amazon Navbar -->
-  <header class="amz-header">
-    <div class="amz-nav-top">
-      <!-- Brand Logo -->
-      <a href="#" class="amz-brand" aria-label="Amazon Homepage">
-        <span class="amz-logo-text">amazon</span>
-        <span class="amz-aria-badge">aria <span class="ai-spark">AI</span></span>
+  <!-- Demo Disclaimer Ribbon -->
+  <div class="demo-ribbon" role="region" aria-label="Demo notice">
+    <div class="ribbon-inner">
+      <span class="ribbon-badge">DEMO SANDBOX</span>
+      <span class="ribbon-text">
+        Live AI chat, inventory & order simulation active. Payments & real carrier APIs are marked <em>Coming soon</em>. Note: Cloud instances reset session files on redeploy.
+      </span>
+    </div>
+  </div>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="nav-top">
+      <!-- Aria Market Custom Brand Logo -->
+      <a href="#" class="brand-logo" aria-label="Aria Market Home">
+        <div class="brand-mark">
+          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" aria-hidden="true">
+            <rect width="32" height="32" rx="8" fill="url(#brandGrad)" />
+            <path d="M16 6L7 24h4.5l2-4.5h5l2 4.5H25L16 6zm0 7.5l1.6 3.5h-3.2L16 13.5z" fill="#ffffff" />
+            <circle cx="24" cy="8" r="3" fill="#38bdf8" />
+            <defs>
+              <linearGradient id="brandGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#4f46e5" />
+                <stop offset="1" stop-color="#7c3aed" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Aria<span class="brand-name-accent">Market</span></span>
+          <span class="brand-tag">AI Shopping Copilot</span>
+        </div>
       </a>
 
-      <!-- Deliver To Location -->
-      <div class="amz-deliver-box" id="locationBtn" role="button" tabindex="0" title="Click to change location">
-        <svg class="deliver-pin-svg" viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-        <div class="amz-deliver-text">
-          <span class="deliver-sub">Deliver to</span>
-          <span class="deliver-main" id="deliverLocation">Chennai 600001</span>
+      <!-- Interactive Location Picker -->
+      <div class="deliver-picker" id="locationBtn" role="button" tabindex="0" title="Click to update your delivery city">
+        <svg class="location-pin-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+        <div class="deliver-meta">
+          <span class="deliver-meta-sub">Deliver to</span>
+          <span class="deliver-meta-main" id="deliverLocation">Select Location</span>
         </div>
       </div>
 
-      <!-- Search Bar -->
-      <div class="amz-search-bar" id="searchBarContainer">
-        <select class="amz-search-dept" id="deptSelect" aria-label="Search Department">
-          <option value="all">All</option>
+      <!-- Main Search Bar -->
+      <div class="nav-search-bar" id="searchBarContainer">
+        <select class="search-category-select" id="deptSelect" aria-label="Department filter">
+          <option value="all">All Items</option>
           <option value="Electronics">Electronics</option>
           <option value="Wearables">Wearables</option>
           <option value="Furniture">Furniture</option>
@@ -45,83 +72,87 @@
         <input
           type="text"
           id="amzSearchInput"
-          class="amz-search-input"
-          placeholder="Search Amazon or ask Aria AI (e.g. 'Do you have fitness watch?')"
-          aria-label="Search products or ask Aria AI"
+          class="search-text-input"
+          placeholder="Search products or ask Aria AI (e.g. 'Do you have fitness watch?')"
+          aria-label="Search catalog or ask Aria"
         />
-        <button class="amz-search-btn" id="amzSearchBtn" type="button" aria-label="Submit search" title="Search">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <button class="search-action-btn" id="amzSearchBtn" type="button" aria-label="Submit search" title="Search">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
         </button>
       </div>
 
-      <!-- Quick Nav Actions -->
-      <div class="amz-nav-actions">
-        <div class="amz-lang-selector" id="langSelector" role="button" tabindex="0" aria-label="Language selection: English">
-          <svg class="flag-svg" viewBox="0 0 24 16" width="20" height="14" aria-hidden="true">
+      <!-- Nav Actions -->
+      <div class="nav-right-actions">
+        <!-- Region / Language -->
+        <div class="region-selector" id="langSelector" role="button" tabindex="0" aria-label="Language selector">
+          <svg class="lang-flag-svg" viewBox="0 0 24 16" width="18" height="12" aria-hidden="true">
             <rect width="24" height="16" fill="#b22234"/>
             <path d="M0 2.46h24M0 4.92h24M0 7.38h24M0 9.84h24M0 12.3h24M0 14.76h24" stroke="#fff" stroke-width="1.23"/>
             <rect width="10" height="8.6" fill="#3c3b6e"/>
           </svg>
-          <span class="lang-text">EN ▾</span>
+          <span class="lang-code">EN</span>
         </div>
 
-        <div class="amz-nav-link" id="accountBtn" role="button" tabindex="0">
-          <span class="nav-link-sub">Hello, Guest</span>
-          <span class="nav-link-main">Account & Lists ▾</span>
+        <!-- Orders & Tracking -->
+        <div class="nav-action-link" id="ordersNavBtn" role="button" tabindex="0" title="View order history & live tracking">
+          <span class="action-sub">Returns</span>
+          <span class="action-main">& Orders</span>
         </div>
 
-        <div class="amz-nav-link" id="ordersNavBtn" role="button" tabindex="0">
-          <span class="nav-link-sub">Returns</span>
-          <span class="nav-link-main">& Orders</span>
-        </div>
-
-        <div class="amz-cart-btn" id="cartBtn" role="button" tabindex="0" aria-label="Shopping Cart">
-          <div class="cart-icon-wrap">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-            <span class="amz-cart-count" id="cartCount">0</span>
+        <!-- Shopping Cart -->
+        <div class="nav-cart-box" id="cartBtn" role="button" tabindex="0" aria-label="Shopping Cart">
+          <div class="cart-svg-wrap">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="cart-bubble-count" id="cartCount">0</span>
           </div>
-          <span class="cart-label">Cart</span>
+          <span class="cart-title">Cart</span>
         </div>
 
-        <!-- Launch Aria Floating / Drawer Button -->
-        <button class="amz-aria-launch-btn" id="openAriaBtn" type="button">
-          <span class="sparkle-anim">✨</span>
-          <span>Ask Aria AI</span>
+        <!-- Aria AI Copilot Launcher -->
+        <button class="copilot-launch-btn" id="openAriaBtn" type="button">
+          <span class="sparkle-icon">✨</span>
+          <span>Ask Aria</span>
         </button>
       </div>
     </div>
 
-    <!-- Sub Navigation Ribbon -->
-    <nav class="amz-nav-sub" aria-label="Store departments">
-      <ul class="amz-sub-links">
-        <li><button class="sub-link-menu" id="allCategoriesBtn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg> All</button></li>
-        <li><a href="#deals" class="sub-link">Today's Deals</a></li>
-        <li><a href="#customer-service" class="sub-link" id="csLink">Customer Service</a></li>
-        <li><a href="#registry" class="sub-link">Registry</a></li>
-        <li><a href="#gift-cards" class="sub-link">Gift Cards</a></li>
-        <li><a href="#sell" class="sub-link">Sell</a></li>
-        <li class="sub-link-highlight"><a href="#" id="ariaCopilotPill">✨ Aria Shopping Copilot</a></li>
+    <!-- Secondary Navigation Bar -->
+    <nav class="nav-sub-ribbon" aria-label="Marketplace Navigation">
+      <ul class="sub-ribbon-list">
+        <li><button class="sub-nav-btn is-active" id="allCategoriesBtn">All Products</button></li>
+        <li><a href="#catalog" class="sub-nav-link">Catalog Deals</a></li>
+        <li><a href="#orders" class="sub-nav-link" id="orderTrackLink">Order Status</a></li>
+        <li><a href="#support" class="sub-nav-link" id="supportPoliciesLink">Store Policies</a></li>
+        <li><span class="sub-nav-pill-badge">⚡ Aria Express: 2-Day Delivery</span></li>
       </ul>
-      <div class="amz-sub-promo">
-        <span>Free Prime Delivery on Eligible Orders</span>
+      <div class="sub-ribbon-status">
+        <span class="ai-status-indicator"></span>
+        <span>Aria Assistant Active</span>
       </div>
     </nav>
   </header>
 
-  <!-- Main Store Layout -->
-  <main class="store-container">
-    <!-- Hero Banner with Aria Interactive Suggestions -->
-    <section class="hero-banner">
-      <div class="hero-content">
-        <span class="hero-eyebrow">Meet Aria Copilot · Amazon AI Assistant</span>
-        <h1 class="hero-title">Shop Smarter, Track Faster & Resolve Anything 24/7</h1>
-        <p class="hero-desc">
-          Ask Aria to check live inventory, order products, track packages (like <strong>ORD1001</strong>),
-          update delivery addresses, or handle returns and refunds automatically.
+  <!-- Main Marketplace Container -->
+  <main class="market-main">
+    <!-- Hero Copilot Banner -->
+    <section class="copilot-hero">
+      <div class="hero-left">
+        <div class="hero-tag">
+          <span class="hero-tag-dot"></span>
+          <span>Next-Gen Conversational Commerce</span>
+        </div>
+        <h1 class="hero-heading">Shop, track orders & solve issues with Aria AI</h1>
+        <p class="hero-lead">
+          Aria connects directly to our product inventory and customer care policies. Ask about stock counts,
+          place simulated orders, trace tracking numbers, update shipping addresses, or file support tickets.
         </p>
 
-        <!-- Quick prompt pills that trigger Aria directly -->
-        <div class="hero-prompts" id="heroPrompts">
+        <!-- Quick Interactive Prompt Pills -->
+        <div class="hero-prompt-group" id="heroPrompts">
           <button class="prompt-chip" type="button" data-prompt="Do you have Smart Fitness Watch in stock?">
             ⌚ Smart Fitness Watch Stock
           </button>
@@ -148,149 +179,184 @@
     </section>
 
     <!-- Product Catalog Section -->
-    <section class="catalog-section" aria-labelledby="catalogTitle">
-      <div class="catalog-header">
+    <section class="catalog-view" id="catalog" aria-labelledby="catalogTitle">
+      <div class="catalog-top-bar">
         <div>
-          <h2 class="section-title" id="catalogTitle">Featured Deals & Best Sellers</h2>
-          <p class="section-sub">Live stock counts powered by Aria inventory intelligence</p>
+          <h2 class="catalog-heading" id="catalogTitle">Featured Products & Live Inventory</h2>
+          <p class="catalog-subtitle">Real stock counts synced with Aria’s operations database</p>
         </div>
-        <div class="catalog-filters">
-          <button class="filter-pill active" data-category="all">All Products</button>
-          <button class="filter-pill" data-category="Electronics">Electronics</button>
-          <button class="filter-pill" data-category="Wearables">Wearables</button>
-          <button class="filter-pill" data-category="Furniture">Furniture</button>
-          <button class="filter-pill" data-category="Kitchen & Outdoors">Kitchen & Outdoors</button>
+        <div class="catalog-category-tabs">
+          <button class="category-tab active" data-category="all">All Products</button>
+          <button class="category-tab" data-category="Electronics">Electronics</button>
+          <button class="category-tab" data-category="Wearables">Wearables</button>
+          <button class="category-tab" data-category="Furniture">Furniture</button>
+          <button class="category-tab" data-category="Kitchen & Outdoors">Kitchen & Outdoors</button>
         </div>
       </div>
 
-      <!-- Products Grid -->
-      <div class="product-grid" id="productGrid" aria-live="polite">
-        <!-- Injected via JavaScript from /api/products -->
+      <!-- Dynamic Product Grid -->
+      <div class="catalog-grid" id="productGrid" aria-live="polite">
+        <!-- Rendered via script.js -->
+      </div>
+    </section>
+
+    <!-- Features Roadmap / Transparent Disclosures -->
+    <section class="roadmap-section">
+      <h3 class="roadmap-title">Aria Market Platform Status</h3>
+      <div class="roadmap-grid">
+        <div class="roadmap-card card-active">
+          <div class="roadmap-header">
+            <span class="roadmap-status-dot status-live"></span>
+            <h4>Live AI Operations</h4>
+          </div>
+          <p>Product inventory queries, order placement simulation, order lookups, address changes, policy retrieval, and support tickets.</p>
+        </div>
+        <div class="roadmap-card card-active">
+          <div class="roadmap-header">
+            <span class="roadmap-status-dot status-live"></span>
+            <h4>Zero-Database Client Privacy</h4>
+          </div>
+          <p>Chat conversations stored in your browser’s localStorage. Full control to delete individual chats or clear history with 1 click.</p>
+        </div>
+        <div class="roadmap-card card-soon">
+          <div class="roadmap-header">
+            <span class="roadmap-badge-soon">COMING SOON</span>
+            <h4>Stripe & Razorpay Payments</h4>
+          </div>
+          <p>Production payment processing with sandbox test cards and end-to-end receipt generation in development.</p>
+        </div>
+        <div class="roadmap-card card-soon">
+          <div class="roadmap-header">
+            <span class="roadmap-badge-soon">COMING SOON</span>
+            <h4>Carrier GPS Integration</h4>
+          </div>
+          <p>Live package GPS coordinates, carrier status webhooks (FedEx/DHL/IndiaPost), and automatic SMS notifications.</p>
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- Orders Modal / Drawer -->
-  <div class="modal-overlay" id="ordersModal" hidden>
-    <div class="modal-window">
-      <div class="modal-header">
+  <!-- Orders & Tracking Modal -->
+  <div class="modal-backdrop" id="ordersModal" hidden>
+    <div class="modal-dialog">
+      <div class="modal-dialog-header">
         <div>
-          <h2 class="modal-title">Your Orders & Package Tracking</h2>
-          <p class="modal-sub">View recent purchases or ask Aria to update them</p>
+          <h2 class="modal-heading">Recent Orders & Package Tracking</h2>
+          <p class="modal-subheading">Track shipments or instruct Aria to modify them</p>
         </div>
-        <button class="modal-close-btn" id="closeOrdersModalBtn" aria-label="Close orders">&times;</button>
+        <button class="modal-close-icon" id="closeOrdersModalBtn" aria-label="Close modal">&times;</button>
       </div>
-      <div class="modal-body">
-        <div class="orders-list" id="ordersList">
+      <div class="modal-dialog-body">
+        <div class="orders-feed" id="ordersList">
           <!-- Populated from /api/orders -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Cart Notification Toast -->
-  <div class="toast" id="toastNotification" role="alert" hidden>
-    <span class="toast-icon">✓</span>
-    <span class="toast-message" id="toastMessage">Item added to cart!</span>
+  <!-- Toast Notification -->
+  <div class="toast-popup" id="toastNotification" role="alert" hidden>
+    <span class="toast-check">✓</span>
+    <span class="toast-msg" id="toastMessage">Action completed!</span>
   </div>
 
   <!-- ================================================================= -->
   <!-- ARIA AI ASSISTANT DRAWER / DOCKED COPILOT                         -->
   <!-- ================================================================= -->
-  <div class="aria-drawer" id="ariaDrawer" aria-label="Aria AI Assistant" role="complementary">
-    <!-- Drawer Header -->
-    <div class="aria-header">
-      <div class="aria-header-brand">
-        <div class="aria-avatar-glow">A</div>
-        <div class="aria-info">
-          <div class="aria-name-row">
-            <span class="aria-title">Aria AI Assistant</span>
-            <span class="status-badge" id="ariaStatusBadge">
-              <span class="status-dot"></span>
+  <div class="aria-drawer" id="ariaDrawer" aria-label="Aria AI Copilot" role="complementary">
+    <!-- Drawer Top Bar -->
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <div class="copilot-avatar">A</div>
+        <div class="copilot-info">
+          <div class="copilot-title-row">
+            <span class="copilot-name">Aria AI Assistant</span>
+            <span class="copilot-online-pill" id="ariaStatusBadge">
+              <span class="online-indicator-dot"></span>
               <span id="ariaStatusText">Online</span>
             </span>
           </div>
-          <span class="aria-sub">Shopping Copilot & 24/7 Support Lead</span>
+          <span class="copilot-role">Commerce & Customer Support Lead</span>
         </div>
       </div>
 
-      <div class="aria-actions">
-        <!-- Toggle Chat History Sidebar -->
-        <button class="aria-icon-btn" id="historyToggleBtn" title="Conversation History" aria-label="Toggle history">
+      <div class="drawer-header-actions">
+        <!-- History Toggle Button -->
+        <button class="drawer-btn" id="historyToggleBtn" title="Conversation History" aria-label="Toggle history">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
         </button>
 
         <!-- New Chat Button -->
-        <button class="aria-icon-btn" id="drawerNewChatBtn" title="New Conversation" aria-label="Start new chat">
+        <button class="drawer-btn" id="drawerNewChatBtn" title="New Conversation" aria-label="Start new chat">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         </button>
 
-        <!-- Close / Minimize Drawer -->
-        <button class="aria-icon-btn" id="closeAriaBtn" title="Minimize Aria" aria-label="Close Aria">
+        <!-- Close / Minimize -->
+        <button class="drawer-btn" id="closeAriaBtn" title="Minimize Aria" aria-label="Close Aria">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
         </button>
       </div>
     </div>
 
-    <!-- Collapsible History Sidebar Inside Drawer -->
-    <div class="aria-history-panel" id="ariaHistoryPanel" hidden>
-      <div class="history-panel-header">
-        <span class="history-panel-title">Conversation History</span>
-        <button class="clear-all-btn" id="clearAllHistoryBtn" type="button" title="Delete all conversations">
+    <!-- Collapsible History Sidebar -->
+    <div class="drawer-history-panel" id="ariaHistoryPanel" hidden>
+      <div class="history-panel-bar">
+        <span class="history-panel-heading">Saved Conversations</span>
+        <button class="history-clear-btn" id="clearAllHistoryBtn" type="button" title="Delete all history">
           🗑️ Clear All
         </button>
       </div>
-      <ul class="history-list" id="historyList"></ul>
-      <p class="history-empty" id="historyEmpty">No saved conversations yet.</p>
+      <ul class="history-items-list" id="historyList"></ul>
+      <p class="history-empty-note" id="historyEmpty">No saved conversations yet.</p>
     </div>
 
     <!-- Active Conversation View -->
-    <div class="aria-conversation-wrap">
-      <!-- Welcome Intro inside Aria -->
-      <div class="aria-welcome" id="welcomeScreen">
-        <div class="welcome-box">
-          <div class="welcome-sparkle">✨</div>
-          <h3>Hi! I'm Aria, your Amazon shopping & support copilot.</h3>
+    <div class="drawer-chat-area">
+      <!-- Welcome Screen -->
+      <div class="drawer-welcome-view" id="welcomeScreen">
+        <div class="welcome-card-box">
+          <div class="welcome-card-badge">✨ Aria Market Copilot</div>
+          <h3>Hi! I'm Aria, your shopping & support assistant.</h3>
           <p>
-            I can check live product stock, place orders for you, track packages, update addresses,
-            explain return & refund policies, or open a support ticket.
+            I can check live product stock, place simulated orders, trace tracking numbers, update shipping addresses,
+            explain store policies, or file a support ticket for damaged goods.
           </p>
 
-          <div class="welcome-chips" id="suggestions">
-            <button class="chip-btn" data-question="Do you have Smart Fitness Watch in stock?">
+          <div class="welcome-prompt-list" id="suggestions">
+            <button class="chip-item" data-question="Do you have Smart Fitness Watch in stock?">
               ⌚ Check Fitness Watch stock
             </button>
-            <button class="chip-btn" data-question="Order 2 water bottles to 12 Lake Road, Chennai">
+            <button class="chip-item" data-question="Order 2 water bottles to 12 Lake Road, Chennai">
               🍶 Order 2 water bottles
             </button>
-            <button class="chip-btn" data-question="Where is my order ORD1001?">
+            <button class="chip-item" data-question="Where is my order ORD1001?">
               📦 Where is ORD1001?
             </button>
-            <button class="chip-btn" data-question="What is your refund policy?">
+            <button class="chip-item" data-question="What is your refund policy?">
               🛡️ Refund Policy
             </button>
-            <button class="chip-btn" data-question="Can I cancel my order ORD1003?">
+            <button class="chip-item" data-question="Can I cancel my order ORD1003?">
               ❌ Cancel order ORD1003
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Messages Log -->
-      <div class="aria-messages scroll-area" id="messages" role="log" aria-live="polite" hidden></div>
+      <!-- Messages Stream -->
+      <div class="drawer-messages-stream scroll-area" id="messages" role="log" aria-live="polite" hidden></div>
 
-      <!-- Error / Offline Notice -->
-      <div class="aria-error-banner" id="errorBanner" role="alert" hidden>
+      <!-- Error Banner -->
+      <div class="drawer-error-strip" id="errorBanner" role="alert" hidden>
         <span id="errorText"></span>
-        <div class="error-actions">
-          <button class="btn-retry" id="retryBtn" type="button">Retry</button>
-          <button class="btn-dismiss" id="dismissErrorBtn" type="button">&times;</button>
+        <div class="error-controls">
+          <button class="error-retry-action" id="retryBtn" type="button">Retry</button>
+          <button class="error-dismiss-action" id="dismissErrorBtn" type="button">&times;</button>
         </div>
       </div>
 
-      <!-- Aria Composer Footer -->
-      <footer class="aria-composer">
-        <form class="composer-form" id="chatForm" autocomplete="off">
+      <!-- Composer Bar -->
+      <footer class="drawer-composer">
+        <form class="composer-box" id="chatForm" autocomplete="off">
           <textarea
             id="messageInput"
             rows="1"
@@ -298,11 +364,13 @@
             placeholder="Ask Aria anything (orders, stock, policies, help)…"
             aria-label="Ask Aria"
           ></textarea>
-          <button class="composer-send-btn" id="sendBtn" type="submit" aria-label="Send message" disabled>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+          <button class="composer-submit-btn" id="sendBtn" type="submit" aria-label="Send message" disabled>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>
+            </svg>
           </button>
         </form>
-        <div class="composer-footer-meta">
+        <div class="composer-meta-row">
           <span>Enter to send · Shift+Enter for new line</span>
           <span id="charCount">0 / 2000</span>
         </div>
@@ -311,9 +379,9 @@
   </div>
 
   <!-- Floating Sticky Action Button (when drawer is minimized) -->
-  <button class="aria-floating-pill" id="floatingAriaPill" type="button" aria-label="Open Aria Copilot">
-    <span class="pill-spark">✨</span>
-    <span class="pill-title">Ask Aria AI</span>
+  <button class="floating-copilot-pill" id="floatingAriaPill" type="button" aria-label="Open Aria Copilot">
+    <span class="pill-sparkle">✨</span>
+    <span class="pill-label">Ask Aria</span>
   </button>
 
   <!-- Load Markdown renderer first, followed by script.js -->
